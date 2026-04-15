@@ -37,3 +37,27 @@ def test_agregar_posicion_cambia_estado(portafolio_vacio, posicion_aapl):
     portafolio_vacio.agregar_posicion(posicion_aapl)
     assert len(portafolio_vacio.posiciones) == 1
     assert portafolio_vacio.posiciones[0].instrumento.ticker == "AAPL"
+
+# ─── E) Test de remover posición existente ────────────────────────────────────
+def test_remover_posicion_existente(portafolio_vacio, posicion_aapl):
+    portafolio_vacio.agregar_posicion(posicion_aapl)
+    portafolio_vacio.remover_posicion(ticker="AAPL")
+    assert len(portafolio_vacio.posiciones) == 0
+
+# ─── F) Tests de métodos adicionales de Posicion ─────────────────────────────
+def test_calcular_valor_actual(instrumento_test):
+    posicion = Posicion(instrumento=instrumento_test, cantidad=10, precio_entrada=100)
+    assert posicion.calcular_valor_actual(precio_mercado=200) == pytest.approx(2000)
+
+def test_cantidad_getter(instrumento_test):
+    posicion = Posicion(instrumento=instrumento_test, cantidad=5, precio_entrada=50)
+    assert posicion.cantidad == 5
+
+def test_cantidad_setter_valido(instrumento_test):
+    posicion = Posicion(instrumento=instrumento_test, cantidad=5, precio_entrada=50)
+    posicion.cantidad = 10
+    assert posicion.cantidad == 10
+
+def test_repr_posicion(instrumento_test):
+    posicion = Posicion(instrumento=instrumento_test, cantidad=5, precio_entrada=50)
+    assert "TSLA" in repr(posicion)
