@@ -1,6 +1,7 @@
 import pytest
 from src.modelos import Instrumento, Posicion, CantidadInvalidaError
 from src.portafolio import Portafolio, PosicionNoExisteError
+from src.reportes import ReportadorFinanciero
 
 # ─── A) Tests parametrizados de PnL ───────────────────────────────────────────
 @pytest.mark.parametrize(
@@ -61,3 +62,12 @@ def test_cantidad_setter_valido(instrumento_test):
 def test_repr_posicion(instrumento_test):
     posicion = Posicion(instrumento=instrumento_test, cantidad=5, precio_entrada=50)
     assert "TSLA" in repr(posicion)
+
+# ─── G) Test de ReportadorFinanciero ─────────────────────────────────────────
+def test_reportador_imprime_resumen(portafolio_vacio, posicion_aapl, capsys):
+    portafolio_vacio.agregar_posicion(posicion_aapl)
+    reportador = ReportadorFinanciero()
+    reportador.imprimir_resumen(portafolio_vacio)
+    captura = capsys.readouterr()
+    assert "AAPL" in captura.out
+    assert "SmartPortfolio" in captura.out
